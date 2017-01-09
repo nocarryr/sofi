@@ -33,7 +33,7 @@ class Element(object):
     def html_attrs(self):
         attrs = self._get_all_attrs()
         if not len(attrs):
-            return ' '
+            return ''
         return self._attrs_to_string((key, attr) for key, attr in attrs.items())
 
     @property
@@ -115,9 +115,9 @@ class Element(object):
 
     def __str__(self):
         if self.has_content:
-            html_template = '<{self.tag}{self.html_attrs}>{self.content}{self.closing_tag}'
+            html_template = '<{self.html_tag}{self.html_attrs}>{self.content}{self.closing_tag}'
         else:
-            html_template = '<{self.tag}{self.html_attrs}{self.closing_tag}'
+            html_template = '<{self.html_tag}{self.html_attrs}{self.closing_tag}'
         return html_template.format(self=self)
 
     def addelement(self, item):
