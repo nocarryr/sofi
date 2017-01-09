@@ -1,4 +1,8 @@
+import sys
 from setuptools import setup, find_packages
+
+needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
+setup_requires = ['pytest-runner>=2.9'] if needs_pytest else []
 
 setup(
     author = "tryexceptpass",
@@ -19,7 +23,7 @@ setup(
     },
 
     install_requires = [ 'autobahn' ],
-    setup_requires=['pytest-runner>=2.9'],
+    setup_requires=setup_requires,
     tests_require=['pytest>=3.0.2', 'pytest-asyncio>=0.5.0', 'hypothesis'],
 
     license = "MIT",
