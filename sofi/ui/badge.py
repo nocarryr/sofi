@@ -1,7 +1,6 @@
-from .element import Element
 from .span import Span
 
-class Badge(Element):
+class Badge(Span):
     """Implement Boostrap Badge <span class="badge">"""
 
     def __init__(self, text=None, cl=None, ident=None, style=None, attrs=None):
@@ -9,14 +8,10 @@ class Badge(Element):
 
         self.text = text
 
+    def _get_all_classes(self):
+        classes = super()._get_all_classes()
+        classes.add('badge')
+        return classes
+
     def __repr__(self):
         return "<Badge(text='" + self.text + "')>"
-
-    def __str__(self):
-        badge_cl = "badge"
-
-        if self.cl:
-            badge_cl = badge_cl + " " + self.cl
-
-        return str(Span(text=self.text, cl=badge_cl, ident=self.ident,
-                        style=self.style, attrs=self.attrs))

@@ -11,6 +11,7 @@ class Button(Element):
                    'default': 'btn-default'
                  }
 
+    html_tag = 'button'
     def __init__(self, text=None, severity=None, size=None, cl=None, ident=None, style=None, attrs=None):
         super().__init__(cl=cl, ident=ident, style=style, attrs=attrs)
 
@@ -18,52 +19,20 @@ class Button(Element):
         self.severity = severity
         self.size = size
 
-    def __repr__(self):
-        return "<Button(text='" + self.text + "')>"
-
-    def __str__(self):
-        output = [ "<button" ]
-
-        if self.ident:
-            output.append(' id="')
-            output.append(self.ident)
-            output.append('"')
-
-        classes = [ "btn" ]
-        output.append(' class="')
+    def _get_all_classes(self):
+        classes = super()._get_all_classes()
         if self.severity:
-            classes.append(Button.SEVERITIES[self.severity])
+            classes.add(Button.SEVERITIES[self.severity])
         else:
-            classes.append(Button.SEVERITIES['default'])
+            classes.add(Button.SEVERITIES['default'])
         if self.size:
             if self.size == "large" or self.size == "lg":
-                classes.append("btn-lg")
+                classes.add("btn-lg")
             elif self.size == "small" or self.size == "sm":
-                classes.append("btn-sm")
+                classes.add("btn-sm")
             elif self.size == "xsmall" or self.size == "xs":
-                classes.append("btn-xs")
-        if self.cl:
-            classes.append(self.cl)
-        output.append(" ".join(classes))
-        output.append('" type="button"')
+                classes.add("btn-xs")
+        return classes
 
-        if self.style:
-            output.append(' style="')
-            output.append(self.style)
-            output.append('"')
-
-        if self.attrs:
-            for k in self.attrs.keys():
-                output.append(' ' + k + '="' + self.attrs[k] + '"')
-
-        output.append('>')
-
-        if self.text:
-            output.append(self.text)
-
-        for child in self._children:
-            output.append(str(child))
-
-        output.append("</button>")
-
-        return "".join(output)
+    def __repr__(self):
+        return "<Button(text='" + self.text + "')>"

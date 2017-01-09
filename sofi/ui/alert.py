@@ -1,4 +1,6 @@
 from .element import Element
+from .button import Button
+from .span import Span
 
 class Alert(Element):
     """Implements the <div class="alert"> tag"""
@@ -15,55 +17,23 @@ class Alert(Element):
         self.text = text
         self.severity = severity
         self.closebtn = closebtn
+        if self.closebtn:
+            btn = Button(cl="close", attrs={'data-dismiss':'alert', 'aria-label':'Close'})
+            btn.addelement(Span(text='&times;', attrs={'aria-hidden':'true'}))
+            self.addelement.append(btn)
+
+    def _get_all_attrs(self):
+        attrs = super()._get_all_attrs()
+        attrs['role'] = 'alert'
+        return attrs
+
+    def _get_all_classes(self):
+        classes = super()._get_all_classes()
+        if self.severity:
+            classes.add(Alert.SEVERITIES[self.severity])
+        if self.closebtn:
+            classes |= {"alert-dismissible", "fade in"}
+        return classes
 
     def __repr__(self):
         return "<Alert(text='" + self.text + "')>"
-
-    def __str__(self):
-        output = [ "<div" ]
-
-        if self.ident:
-            output.append(' id="')
-            output.append(self.ident)
-            output.append('"')
-
-        classes = [ "alert" ]
-        output.append(' class="')
-
-        if self.severity:
-            classes.append(Alert.SEVERITIES[self.severity])
-        if self.closebtn:
-            classes.append("alert-dismissible fade in")
-        if self.cl:
-            classes.append(self.cl)
-
-        output.append(" ".join(classes))
-        output.append('"')
-
-        if self.style:
-            output.append(' style="')
-            output.append(self.style)
-            output.append('"')
-
-        if self.attrs:
-            for k in self.attrs.keys():
-                output.append(' ' + k + '="' + self.attrs[k] + '"')
-
-        output.append(' role="alert"')
-        output.append('>')
-
-        if self.closebtn:
-            output.append('<button type="button" class="close"')
-            output.append(' data-dismiss="alert" aria-label="Close">')
-            output.append('<span aria-hidden="true">&times;</span>')
-            output.append('</button>')
-
-        if self.text:
-            output.append(self.text)
-
-        for child in self._children:
-            output.append(str(child))
-
-        output.append("</div>")
-
-        return "".join(output)

@@ -10,14 +10,10 @@ class AlertLink(Anchor):
         self.text = text
         self.href = href
 
+    def _get_all_classes(self):
+        classes = super()._get_all_classes()
+        classes.add('alert-link')
+        return classes
+
     def __repr__(self):
         return "<AlertLink(href='" + self.href + "')>"
-
-    def __str__(self):
-        classes = [ "alert-link" ]
-
-        if self.cl:
-            classes.append(self.cl)
-
-        return str(Anchor(text=self.text, href=self.href, cl=" ".join(classes), ident=self.ident,
-                    style=self.style, attrs=self.attrs))
