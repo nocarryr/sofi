@@ -62,7 +62,7 @@ class Element(object):
         return attrs
 
     def _get_all_classes(self):
-        classes = {}
+        classes = set()
         if self.cl:
             if isinstance(self.cl, str):
                 classes |= set(self.cl.split(' '))
