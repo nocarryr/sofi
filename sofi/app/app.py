@@ -172,7 +172,7 @@ class SofiEventProtocol(WebSocketServerProtocol):
 
     def onClose(self, wasClean, code, reason):
         logging.info("WebSocket connection closed: {}".format(reason))
-        exit(0)
+        asyncio.get_event_loop().stop()
 
 
 class SofiEventServer(object):
