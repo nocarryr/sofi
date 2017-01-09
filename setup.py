@@ -19,8 +19,8 @@ setup(
     },
 
     install_requires = [ 'autobahn' ],
-    setup_requires=['pytest-runner'],
-    tests_require=['pytest', 'pytest-asyncio', 'hypothesis'],
+    setup_requires=['pytest-runner>=2.9'],
+    tests_require=['pytest>=3.0.2', 'pytest-asyncio>=0.5.0', 'hypothesis'],
 
     license = "MIT",
     classifiers = [ 'License :: OSI Approved :: MIT License',
