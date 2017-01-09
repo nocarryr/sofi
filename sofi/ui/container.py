@@ -15,42 +15,12 @@ class Container(Element):
         r.addelement(element)
         self.addelement(r)
 
+    def _get_all_classes(self):
+        classes = super()._get_all_classes()
+        classes.add('container')
+        if self.fluid:
+            classes.add('container-fluid')
+        return classes
+
     def __repr__(self):
         return "<Container(fluid=" + str(self.fluid) + ")>"
-
-    def __str__(self):
-        output = [ "<div " ]
-
-        if self.ident:
-            output.append("id=\"")
-            output.append(self.ident)
-            output.append("\" ")
-
-        output.append("class=\"container")
-
-        if self.fluid:
-            output.append("-fluid")
-
-        if self.cl:
-            output.append(" ")
-            output.append(self.cl)
-
-        output.append("\"")
-
-        if self.style:
-            output.append(" style=\"")
-            output.append(self.style)
-            output.append("\"")
-
-        if self.attrs:
-            for k in self.attrs.keys():
-                output.append(' ' + k + '="' + self.attrs[k] + '"')
-
-        output.append(">")
-
-        for child in self._children:
-            output.append(str(child))
-
-        output.append("</div>")
-
-        return "".join(output)

@@ -3,6 +3,7 @@ from .element import Element
 class FontAwesomeIcon(Element):
     """Implements a Font Awesome Icons"""
 
+    html_tag = 'i'
     def __init__(self, name=None, size=None, fixed=False, animation=None,
                  rotate=None, flip=None, border=False, pull=None,
                  cl=None, ident=None, style=None, attrs=None):
@@ -17,66 +18,35 @@ class FontAwesomeIcon(Element):
         self.border = border
         self.pull = pull
 
-    def __repr__(self):
-        return "<Icon(name='" + self.name + "')>"
+    def _get_all_classes(self):
+        classes = super()._get_all_classes()
 
-    def __str__(self):
-
-        output = [ "<i" ]
-
-        if self.ident:
-            output.append(" id=\"")
-            output.append(self.ident)
-            output.append("\"")
-
-        classes = ["fa"]
-
+        classes.add('fa')
         if self.name:
-            classes.append("fa-" + self.name)
+            classes.add("fa-{}".format(self.name))
 
         if self.animation:
-            classes.append("fa-" + self.animation)
+            classes.add("fa-".format(self.animation))
 
         if self.rotate:
-            classes.append("fa-rotate-" + self.rotate)
+            classes.add("fa-rotate-{}".format(self.rotate))
 
         if self.border:
-            classes.append("fa-border")
+            classes.add("fa-border")
 
         if self.pull:
-            classes.append("fa-pull-" + self.pull)
+            classes.add("fa-pull-{}".format(self.pull))
 
         if self.flip:
-            classes.append("fa-flip-" + self.flip)
+            classes.add("fa-flip-{}".format(self.flip))
 
         if self.size:
-            classes.append("fa-" + self.size)
+            classes.add("fa-{}".format(self.size))
 
         if self.fixed:
-            classes.append("fa-fw")
+            classes.add("fa-fw")
 
-        if self.cl:
-            classes.append(self.cl)
+        return classes
 
-        if len(classes) > 0:
-            output.append(' class="')
-            output.append(" ".join(classes))
-            output.append('"')
-
-        if self.style:
-            output.append(" style=\"")
-            output.append(self.style)
-            output.append("\"")
-
-        if self.attrs:
-            for k in self.attrs.keys():
-                output.append(' ' + k + '="' + self.attrs[k] + '"')
-
-        output.append(">")
-
-        for child in self._children:
-            output.append(str(child))
-
-        output.append("</i>")
-
-        return "".join(output)
+    def __repr__(self):
+        return "<Icon(name='" + self.name + "')>"

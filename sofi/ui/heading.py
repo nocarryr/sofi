@@ -11,38 +11,9 @@ class Heading(Element):
         if text:
             self._children.append(text)
 
+    @property
+    def html_tag(self):
+        return 'h{self.size}'.format(self=self)
+
     def __repr__(self):
         return "<Heading(size=" + str(self.size) + ")>"
-
-    def __str__(self):
-        output = [ "<h", str(self.size) ]
-
-        if self.ident:
-            output.append(" id=\"")
-            output.append(self.ident)
-            output.append("\"")
-
-        if self.cl:
-            output.append(" class=\"")
-            output.append(self.cl)
-            output.append("\"")
-
-        if self.style:
-            output.append(" style=\"")
-            output.append(self.style)
-            output.append("\"")
-
-        if self.attrs:
-            for k in self.attrs.keys():
-                output.append(' ' + k + '="' + self.attrs[k] + '"')
-
-        output.append(">")
-
-        for child in self._children:
-            output.append(str(child))
-
-        output.append("</h")
-        output.append(str(self.size))
-        output.append(">")
-
-        return "".join(output)

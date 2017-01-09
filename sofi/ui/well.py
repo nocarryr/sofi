@@ -1,5 +1,4 @@
 from .element import Element
-from .div import Div
 
 class Well(Element):
     """Implements the Bootstrap Well <div class="well">"""
@@ -10,20 +9,15 @@ class Well(Element):
         self.size = size
         self.text = text
 
-    def __repr__(self):
-        return "<Well(text='" + self.text + "')>"
-
-    def __str__(self):
-        classes = [ "well" ]
-
+    def _get_all_classes(self):
+        classes = super()._get_all_classes()
+        classes.add('well')
         if self.size:
             if self.size == "large" or self.size == "lg":
-                classes.append("well-lg")
+                classes.add("well-lg")
             elif self.size == "small" or self.size == "sm":
-                classes.append("well-sm")
+                classes.add("well-sm")
+        return classes
 
-        if self.cl:
-            classes.append(self.cl)
-
-        return str(Div(text=self.text, cl=" ".join(classes), ident=self.ident, style=self.style,
-                    attrs=self.attrs))
+    def __repr__(self):
+        return "<Well(text='" + self.text + "')>"

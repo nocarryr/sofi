@@ -3,7 +3,7 @@ from .element import Element
 class Textarea(Element):
     """Implements <textarea> tag"""
 
-
+    html_tag = 'textarea'
     def __init__(self, text=None, rows=None, cl=None, ident=None, style=None, attrs=None):
         super().__init__(cl=cl, ident=ident, style=style, attrs=attrs)
 
@@ -12,41 +12,16 @@ class Textarea(Element):
 
         self.rows = rows
 
+    def _get_all_attrs(self):
+        attrs = super()._get_all_attrs()
+        if self.rows:
+            attrs['rows'] = self.rows
+        return attrs
+
+    def _get_all_classes(self):
+        classes = super()._get_all_classes()
+        classes.add('form-control')
+        return classes
+
     def __repr__(self):
         return "<Textarea>"
-
-    def __str__(self):
-        output = [ "<textarea" ]
-
-        if self.ident:
-            output.append(" id=\"")
-            output.append(self.ident)
-            output.append("\"")
-
-        output.append(" class=\"form-control")
-
-        if self.cl:
-            output.append(" ")
-            output.append(self.cl)
-        output.append("\"")
-
-        if self.style:
-            output.append(" style=\"")
-            output.append(self.style)
-            output.append("\"")
-
-        if self.rows:
-            output.append(" rows=\"" + str(self.rows) + "\"")
-
-        if self.attrs:
-            for k in self.attrs.keys():
-                output.append(' ' + k + '="' + self.attrs[k] + '"')
-
-        output.append(">")
-
-        for child in self._children:
-            output.append(str(child))
-
-        output.append("</textarea>")
-
-        return "".join(output)
