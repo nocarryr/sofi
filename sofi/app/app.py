@@ -9,9 +9,9 @@ import logging
 from autobahn.asyncio.websocket import WebSocketServerFactory, WebSocketServerProtocol
 
 class Sofi(object):
-    def __init__(self):
+    def __init__(self, hostname='127.0.0.1', port=9000):
         self.interface = SofiEventProcessor()
-        self.server = SofiEventServer(processor=self.interface)
+        self.server = SofiEventServer(hostname=hostname, port=port, processor=self.interface)
 
     def start(self, autobrowse=True):
         """Start the application"""
