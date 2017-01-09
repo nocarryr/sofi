@@ -34,7 +34,7 @@ class Element(object):
         attrs = self._get_all_attrs()
         if not len(attrs):
             return ' '
-        return self._attrs_to_string(attrs)
+        return self._attrs_to_string((key, attr) for key, attr in attrs.items())
 
     @property
     def content(self):
