@@ -58,6 +58,7 @@ async def oninit(event):
 
     c.newrow(Heading(2, "Dude!"))
     c.newrow(Paragraph("Where's My Car?", ident="fiddle"))
+    c.newrow(Paragraph(' ', ident='font_size_lbl'))
 
     bd = ButtonDropdown('A Dropdown', size='xs', dropup=True, split=True, severity="success")
     bd.addelement(DropdownItem('Item Header', header=True))
@@ -95,6 +96,12 @@ async def onload(event):
 
     for i in range(1, 5):
         app.style("#fiddle", 'font-size', str(i*2) + "em", 'important')
+        app.attr('#fiddle', 'data-font-size', str(i*2) + 'em')
+
+        font_size = await app.get_attr('#fiddle', 'data-font-size')
+        app.text('#font_size_lbl', font_size)
+        txt = await app.get_text('#font_size_lbl')
+        assert txt == font_size
 
         await asyncio.sleep(1)
 

@@ -63,10 +63,24 @@ class Sofi(object):
 
         self.interface.dispatch({ 'name': 'text', 'selector': selector, 'text': text })
 
+    async def get_text(self, selector):
+        """Get the text for elements matching the selector."""
+
+        key = ':'.join([selector, 'text'])
+        value = await self.interface.dispatch_getter({'name':'text', 'selector':selector, 'key':key})
+        return value
+
     def attr(self, selector, attr, value):
         """Set the attribute for elements matching this selector."""
 
         self.interface.dispatch({ 'name': 'attr', 'selector': selector, 'attr': attr, 'value': value })
+
+    async def get_attr(self, selector, attr):
+        """Get the attribute for elements matching this selector."""
+
+        key = ':'.join([selector, 'attr', attr])
+        value = await self.interface.dispatch_getter({'name':'attr', 'selector':selector, 'attr':attr, 'key':key})
+        return value
 
     def style(self, selector, style, value, priority=None):
         """Set the style for elements matching this selector. The priority field can be set to "important" to force the style."""
@@ -77,6 +91,13 @@ class Sofi(object):
         """Set the property for elements matching this selector. Properties are special attributes like 'checked' or 'value'."""
 
         self.interface.dispatch({ 'name': 'attr', 'selector': selector, 'property': property, 'value': value })
+
+    async def get_property(self, selector, prop):
+        """Get the property for elements matching this selector. Properties are special attributes like 'checked' or 'value'."""
+
+        key = ':'.join([selector, 'property', prop])
+        value = await self.interface.dispatch_getter({'name':'property', 'selector':selector, 'property':prop, 'key':key})
+        return value
 
 
 class SofiEventProcessor(object):
@@ -92,6 +113,8 @@ class SofiEventProcessor(object):
                  'keyup': { '_': [] },
                  'keypress': { '_': [] }
                }
+    def __init__(self):
+        self.getter_events = asyncio.Queue()
 
     def register(self, event, callback, selector=None):
         if event not in self.handlers:
@@ -132,9 +155,26 @@ class SofiEventProcessor(object):
     def dispatch(self, command):
         self.protocol.sendMessage(bytes(json.dumps(command), 'utf-8'), False)
 
+    async def dispatch_getter(self, command):
+        key = command['key']
+        command['is_getter'] = True
+        command['event'] = 'getter'
+        self.dispatch(command)
+        while True:
+            event = await self.getter_events.get()
+            self.getter_events.task_done()
+            if event['key'] == key:
+                return event['value']
+            else:
+                await self.getter_events.put(event)
+
     async def process(self, protocol, event):
         self.protocol = protocol
         eventtype = event['event']
+
+        if event.get('is_getter'):
+            await self.getter_events.put(event)
+            return
 
         if eventtype in self.handlers:
             # Check for local handler

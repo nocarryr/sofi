@@ -38,21 +38,36 @@ function init() {
             d3.selectAll(command.selector).classed(command.cl, false)
         }
         else if (command.name == "text") {
-            d3.selectAll(command.selector).text(command.text)
+            if (command.is_getter){
+                command.value = d3.selectAll(command.selector).text();
+                socket.send(JSON.stringify(command));
+            } else {
+                d3.selectAll(command.selector).text(command.text);
+            }
         }
         else if (command.name == "attr") {
-            d3.selectAll(command.selector).attr(command.attr, command.value)
+            if (command.is_getter){
+                command.value = d3.selectAll(command.selector).attr(command.attr);
+                socket.send(JSON.stringify(command));
+            } else {
+                d3.selectAll(command.selector).attr(command.attr, command.value);
+            }
         }
         else if (command.name == "style") {
             if (command.priority) {
                 d3.selectAll(command.selector).style(command.style, command.value, command.priority)
             }
             else {
-                d3.selectAll(command.selector).style(command.style, command.value)    
+                d3.selectAll(command.selector).style(command.style, command.value)
             }
         }
         else if (command.name == "property") {
-            d3.selectAll(command.selector).property(command.property, command.value)
+            if (command.is_getter){
+                command.value = d3.selectAll(command.selector).property(command.property);
+                socket.send(JSON.stringify(command));
+            } else {
+                d3.selectAll(command.selector).property(command.property, command.value);
+            }
         }
         else if (command.name == "subscribe") {
             var key = command.key
